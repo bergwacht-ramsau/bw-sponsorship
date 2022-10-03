@@ -53,16 +53,26 @@ public class SponsorController : ControllerBase
     }
 
     [HttpGet("{UId}")]
-    public async Task<ActionResult<Sponsor>> ValidateSponsor(string uid)
+    public async Task<ActionResult<String>> ValidateSponsor(string uid)
     {
-        try
-        {
-            var sponsor = _context.Sponsors.Where(s => s.UId == uid).First();
-            return sponsor;
-        }
-        catch (ArgumentNullException)
+        var sponsor = await _context.Sponsors.FindAsync(uid);
+        if (sponsor == null)
         {
             return NotFound();
         }
+        if (DateTime.Compare(sponsor.created.AddHours(24), DateTime.Now) < 0){
+            return BadRequest("Link abgelaufen");
+        }
+        var mailMessage = new MailMessage
+        {
+            From = _mail,
+            Subject = "Neuer Förderer",
+            Body = sponsor.ToString(),
+            IsBodyHtml = false,
+        };
+        mailMessage.To.Add("info@bergwacht-ramsau.de");
+
+        _smtpClient.Send(mailMessage);
+        return "Erfolgreich validiert";
     }
 }

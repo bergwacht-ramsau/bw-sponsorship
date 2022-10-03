@@ -1,22 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BW_SPONSORSHIP.Models
 {
     public class Sponsor
     {
-        public long Id { get; }
-        public string Name { get; }
-        public string Surname {get; }
-        public DateTime DateOfBirth {get;}
-        public string Street {get;}
-        public string PostalCode {get;}
-        public string City {get;}
-        public string Phone {get;}
-        public string EMail {get;}
-        public string Bank {get;}
+        [Key]
+        public string UId { get; set; }
+        public DateTime created { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Street { get; set; }
+        public string PostalCode { get; set; }
+        public string City { get; set; }
+        public string Phone { get; set; }
+        public string EMail { get; set; }
+        public string Bank { get; set; }
+        public string IBAN { get; set; }
 
-        public string IBAN {get;}
-        public string UId {get;}
-
-        public Sponsor(){
+        public Sponsor()
+        {
             //Needed for EF
             this.Name = "";
             this.Surname = "";
@@ -30,7 +33,8 @@ namespace BW_SPONSORSHIP.Models
             this.UId = "";
         }
 
-        public Sponsor(SponsorDTO sponsorDTO, string UId){
+        public Sponsor(SponsorDTO sponsorDTO, string UId)
+        {
             this.Name = sponsorDTO.Name;
             this.Surname = sponsorDTO.Surname;
             this.DateOfBirth = sponsorDTO.DateOfBirth;
@@ -42,6 +46,7 @@ namespace BW_SPONSORSHIP.Models
             this.Bank = sponsorDTO.Bank;
             this.IBAN = sponsorDTO.IBAN;
             this.UId = UId;
+            this.created = DateTime.Now;
         }
 
     }
