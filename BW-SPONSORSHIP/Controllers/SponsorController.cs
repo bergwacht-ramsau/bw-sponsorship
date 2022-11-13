@@ -30,7 +30,7 @@ public class SponsorController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Sponsor>> PostSponsor(SponsorDTO sponsorDTO)
+    public async Task<ActionResult<Sponsor>> PostSponsor([FromForm] SponsorDTO sponsorDTO)
     {
         string UId = Guid.NewGuid().ToString();
         Sponsor sponsor = new Sponsor(sponsorDTO, UId);
