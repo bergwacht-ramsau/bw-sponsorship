@@ -34,16 +34,19 @@ public class SponsorController : ControllerBase
     {
         string UId = Guid.NewGuid().ToString();
         Sponsor sponsor = new Sponsor(sponsorDTO, UId);
-        if(sponsor.Sepa){
+        if (sponsor.Sepa)
+        {
             _context.Sponsors.Add(sponsor);
             await _context.SaveChangesAsync();
             SendWelcomeMailSepa(sponsor.EMail, sponsor.UId);
-        }else{
+        }
+        else
+        {
             SendWelcomeMail(sponsor.EMail);
-            
+
         }
 
-        
+
 
         return CreatedAtAction(nameof(PostSponsor), sponsor);
     }
@@ -56,9 +59,10 @@ public class SponsorController : ControllerBase
         {
             return NotFound();
         }
-        if (DateTime.Compare(sponsor.created.AddHours(24), DateTime.Now) < 0){
-           _context.Sponsors.Remove(sponsor);
-           await _context.SaveChangesAsync();
+        if (DateTime.Compare(sponsor.created.AddHours(24), DateTime.Now) < 0)
+        {
+            _context.Sponsors.Remove(sponsor);
+            await _context.SaveChangesAsync();
             return BadRequest("Link abgelaufen");
         }
         SendInfoMail(sponsor, true);
@@ -67,7 +71,8 @@ public class SponsorController : ControllerBase
         return "Erfolgreich validiert";
     }
 
-    private void SendWelcomeMail(string email){
+    private void SendWelcomeMail(string email)
+    {
         var mailMessage = new MailMessage
         {
             From = _mail,
@@ -80,7 +85,8 @@ public class SponsorController : ControllerBase
         _smtpClient.Send(mailMessage);
     }
 
-    private void SendWelcomeMailSepa(string email, string validationUrl){
+    private void SendWelcomeMailSepa(string email, string validationUrl)
+    {
         var mailMessage = new MailMessage
         {
             From = _mail,
@@ -93,12 +99,13 @@ public class SponsorController : ControllerBase
         _smtpClient.Send(mailMessage);
     }
 
-    private void SendInfoMail(Sponsor sponsor, bool acceptedSepa = false){
+    private void SendInfoMail(Sponsor sponsor, bool acceptedSepa = false)
+    {
         var mailMessage = new MailMessage
         {
             From = _mail,
             Subject = "Neuer Förderer",
-            Body = sponsor.ToString() + "Sepa akzeptiert: " + (acceptedSepa ? DateTime.Now.ToString() : "Nein"),
+            Body = sponsor.ToMailString() + "Sepa akzeptiert: " + (acceptedSepa ? (DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + " UTC") : "Nein"),
             IsBodyHtml = false,
         };
         mailMessage.To.Add(_mail);
