@@ -17,6 +17,7 @@ namespace BW_SPONSORSHIP.Models
         public string EMail { get; set; }
         public string Bank { get; set; }
         public string IBAN { get; set; }
+        public bool Sepa {get;set;}
 
         public Sponsor()
         {
@@ -31,6 +32,8 @@ namespace BW_SPONSORSHIP.Models
             this.Bank = "";
             this.IBAN = "";
             this.UId = "";
+            this.Sepa = false;
+
         }
 
         public Sponsor(SponsorDTO sponsorDTO, string UId)
@@ -45,6 +48,7 @@ namespace BW_SPONSORSHIP.Models
             this.EMail = sponsorDTO.EMail;
             this.Bank = sponsorDTO.Bank;
             this.IBAN = sponsorDTO.IBAN;
+            this.Sepa = sponsorDTO.Sepa;
             this.UId = UId;
             this.created = DateTime.Now;
         }

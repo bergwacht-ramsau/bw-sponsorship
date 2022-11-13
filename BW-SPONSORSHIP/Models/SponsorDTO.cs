@@ -12,8 +12,10 @@ namespace BW_SPONSORSHIP.Models
         public string EMail { get; set; }
         public string Bank { get; set; }
         public string IBAN { get; set; }
+        public bool Sepa {get;set;}
+        public string HoneyPot {get;set;}
 
-        public SponsorDTO(string Name, string Surname, DateTime DateOfBirth, string Street, string PostalCode, string City, string Phone, string EMail, string Bank, string IBAN){
+        public SponsorDTO(string Name, string Surname, DateTime DateOfBirth, string Street, string PostalCode, string City, string Phone, string EMail, string Bank, string IBAN, bool Sepa, string HoneyPot){
             this.Name = Name;
             this.Surname = Surname;
             this.DateOfBirth = DateOfBirth;
@@ -24,6 +26,8 @@ namespace BW_SPONSORSHIP.Models
             this.EMail = EMail;
             this.Bank = Bank;
             this.IBAN = IBAN;
+            this.Sepa = Sepa;
+            this.HoneyPot = HoneyPot;
         }
     }
 }

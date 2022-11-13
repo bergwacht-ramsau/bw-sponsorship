@@ -34,20 +34,16 @@ public class SponsorController : ControllerBase
     {
         string UId = Guid.NewGuid().ToString();
         Sponsor sponsor = new Sponsor(sponsorDTO, UId);
+        if(sponsor.Sepa){
+            _context.Sponsors.Add(sponsor);
+            await _context.SaveChangesAsync();
+            SendWelcomeMailSepa(sponsor.EMail, sponsor.UId);
+        }else{
+            SendWelcomeMail(sponsor.EMail);
+            
+        }
 
-        _context.Sponsors.Add(sponsor);
-        await _context.SaveChangesAsync();
-
-        var mailMessage = new MailMessage
-        {
-            From = _mail,
-            Subject = "Neuer Spender",
-            Body = "<h1>Test</h1>",
-            IsBodyHtml = true,
-        };
-        mailMessage.To.Add(sponsor.EMail);
-
-        _smtpClient.Send(mailMessage);
+        
 
         return CreatedAtAction(nameof(PostSponsor), sponsor);
     }
@@ -61,18 +57,52 @@ public class SponsorController : ControllerBase
             return NotFound();
         }
         if (DateTime.Compare(sponsor.created.AddHours(24), DateTime.Now) < 0){
+           _context.Sponsors.Remove(sponsor);
+           await _context.SaveChangesAsync();
             return BadRequest("Link abgelaufen");
         }
+        SendInfoMail(sponsor, true);
+        _context.Sponsors.Remove(sponsor);
+        await _context.SaveChangesAsync();
+        return "Erfolgreich validiert";
+    }
+
+    private void SendWelcomeMail(string email){
+        var mailMessage = new MailMessage
+        {
+            From = _mail,
+            Subject = "Neuer Spender",
+            Body = "<h1>Test</h1>",
+            IsBodyHtml = true,
+        };
+        mailMessage.To.Add(email);
+
+        _smtpClient.Send(mailMessage);
+    }
+
+    private void SendWelcomeMailSepa(string email, string validationUrl){
+        var mailMessage = new MailMessage
+        {
+            From = _mail,
+            Subject = "Neuer Spender",
+            Body = "<h1>Test</h1>",
+            IsBodyHtml = true,
+        };
+        mailMessage.To.Add(email);
+
+        _smtpClient.Send(mailMessage);
+    }
+
+    private void SendInfoMail(Sponsor sponsor, bool acceptedSepa = false){
         var mailMessage = new MailMessage
         {
             From = _mail,
             Subject = "Neuer Förderer",
-            Body = sponsor.ToString(),
+            Body = sponsor.ToString() + "Sepa akzeptiert: " + (acceptedSepa ? DateTime.Now.ToString() : "Nein"),
             IsBodyHtml = false,
         };
-        mailMessage.To.Add("info@bergwacht-ramsau.de");
+        mailMessage.To.Add(_mail);
 
         _smtpClient.Send(mailMessage);
-        return "Erfolgreich validiert";
     }
 }
