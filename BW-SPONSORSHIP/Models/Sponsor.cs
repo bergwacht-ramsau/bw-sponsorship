@@ -46,7 +46,7 @@ namespace BW_SPONSORSHIP.Models
             this.EMail = sponsorDTO.EMail;
             this.Bank = sponsorDTO.Bank;
             this.IBAN = sponsorDTO.IBAN;
-            this.Sepa = sponsorDTO.Sepa;
+            this.Sepa = string.Equals(sponsorDTO.Sepa.ToLower(), "on");
             this.UId = UId;
             this.created = DateTime.Now;
         }
