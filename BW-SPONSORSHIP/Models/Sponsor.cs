@@ -32,8 +32,6 @@ namespace BW_SPONSORSHIP.Models
             this.Bank = "";
             this.IBAN = "";
             this.UId = "";
-            this.Sepa = false;
-
         }
 
         public Sponsor(SponsorDTO sponsorDTO, string UId)

@@ -15,6 +15,20 @@ namespace BW_SPONSORSHIP.Models
         public bool Sepa {get;set;}
         public string Honeypot {get;set;}
 
+        public SponsorDTO(){
+            //Needed for EF Core
+            this.Name = "";
+            this.Surname = "";
+            this.Street = "";
+            this.PostalCode = "";
+            this.City = "";
+            this.Phone = "";
+            this.EMail = "";
+            this.Bank = "";
+            this.IBAN = "";
+            this.Honeypot = "";
+        }
+
         public SponsorDTO(string Name, string Surname, DateTime DateOfBirth, string Street, string PostalCode, string City, string Phone, string EMail, string Bank, string IBAN, bool Sepa, string Honeypot){
             this.Name = Name;
             this.Surname = Surname;
